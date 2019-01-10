@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title *ngIf="item">{{item.ProductName}}</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list *ngIf="item">
+      <ion-item>{{item.ProductName}}&nbsp;({{item.Year}})</ion-item>
+      <ion-item>{{item.Director}}</ion-item>
+      <ion-item>{{item.Screen}}</ion-item>
+      <ion-item>
+        <ion-badge>Cert: {{item.Certificate}}</ion-badge>
+        <ion-badge>&#163;{{item.Price}}</ion-badge>
+      </ion-item>
+      <ion-item class="details" style="font-style: italic">{{item.Actors}}</ion-item>
+      <ion-item class="details">{{item.Description}}</ion-item>
+    </ion-list>
+</ion-content>
