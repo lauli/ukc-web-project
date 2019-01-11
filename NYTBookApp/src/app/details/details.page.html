@@ -11,14 +11,14 @@
 
 <ion-content padding>
     <ion-list *ngIf="item">
-      <ion-item>{{item.ProductName}}&nbsp;({{item.Year}})</ion-item>
-      <ion-item>{{item.Director}}</ion-item>
-      <ion-item>{{item.Screen}}</ion-item>
+      <ion-item>{{item.title}} ({{item.contributor}})</ion-item>
+      <ion-item>Author: {{item.author}}</ion-item>
+      <ion-item>Publisher: {{item.publisher}}</ion-item>
       <ion-item>
-        <ion-badge>Cert: {{item.Certificate}}</ion-badge>
-        <ion-badge>&#163;{{item.Price}}</ion-badge>
+        <ion-badge>Cert: {{item.age_group}}</ion-badge>
+        <ion-badge>&#163;{{item.price}}</ion-badge>
       </ion-item>
-      <ion-item class="details" style="font-style: italic">{{item.Actors}}</ion-item>
-      <ion-item class="details">{{item.Description}}</ion-item>
+      <ion-item class="details" style="font-style: italic">Ranked: {{item.ranks_history.length}} times</ion-item>
+      <ion-item class="details">{{item.description}}</ion-item>
     </ion-list>
 </ion-content>

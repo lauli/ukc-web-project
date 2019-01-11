@@ -12,11 +12,11 @@ export class DetailsPage implements OnInit {
 
     constructor(private route: ActivatedRoute, private api: BookDbService) { }
 
-    ngOnInit() { 
-      // let id = this.route.snapshot.paramMap.get('id');
-      // console.log(id);
-      this.api.getProduct(this.route.snapshot.paramMap.get('id')).subscribe( response => {
-        this.item = response.Product[0];
+    ngOnInit() {
+      let id = this.route.snapshot.paramMap.get('id');
+      console.log(id);
+      this.api.getProduct(id).subscribe( response => {
+        this.item = response.results[0];
       })
     }
 }

@@ -11,11 +11,11 @@
     <ion-label>Categories</ion-label>
 
     <!-- dropdown menu -->
-    <ion-select [(ngModel)]="film_types" (ionChange)="changeCategory(film_types)">
+    <ion-select [(ngModel)]="list_name_encoded" (ionChange)="changeCategory(list_name_encoded)">
       <ion-select-option *ngFor="let item of categories; let i = index"
       [selected]="i==0"
-      value="{{item.CategoryId}}">
-        {{item.CategoryName}}
+      value="{{item.list_name_encoded}}">
+        {{item.list_name}}
       </ion-select-option>
     </ion-select>
 
@@ -23,9 +23,9 @@
 
   <!-- list view of content -->
   <ion-list>
-  <ion-item button color="light" *ngFor="let item of products" [href]="'/details/' + item.ProductId" routerDirection="forward">
-    <ion-label>{{item.ProductName}}<br>
-      <span class="sublabel">{{item.Director}}</span>
+  <ion-item button color="light" *ngFor="let item of books" [href]="'/details/' + item.book_details[0].title" routerDirection="forward">
+    <ion-label>{{item.book_details[0].title}}<br>
+      <span class="sublabel">{{item.book_details[0].description}}</span>
     </ion-label>
   </ion-item>
 </ion-list>

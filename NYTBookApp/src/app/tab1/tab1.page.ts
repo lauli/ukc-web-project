@@ -8,28 +8,33 @@ import { BookDbService } from '../services/book-db.service';
 })
 export class Tab1Page {
   categories: any;
-  products: any;
+  books: any[] = [];
 
   constructor(private api: BookDbService) { }
 
   ngOnInit() {
-    let startId = 1;
+    let startCat = 'combined-print-and-e-book-fiction'; // Combined Print and E-Book Fiction
 
     this.api.getCategories().subscribe( response => {
-      this.categories = response.Categories;
+      this.categories = response.results;
       console.log(this.categories);
     })
 
-    this.api.getFilmsByCategory(startId).subscribe( response => {
-      this.products = response.Products;
-      console.log(this.products);
+    this.api.getBooksByCategory(startCat).subscribe( response => {
+      this.books = response.results;
+      console.log(this.books);
     })
   }
 
-  changeCategory(catId) {
-    this.api.getFilmsByCategory(catId).subscribe( response => {
-      this.products = response.Products;
-      console.log(this.products);
+  changeCategory(list_name_encoded) {
+    this.api.getBooksByCategory(list_name_encoded).subscribe( response => {
+      this.books = response.results;
+      console.log(this.books);
+      // for (let book of response.results) {
+      //   console.log(book.book_details);
+      //   this.books.push(book.book_details)
+      // }
+
     })
   }
 }
