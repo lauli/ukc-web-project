@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
     </ion-buttons>
 
-    <ion-title *ngIf="item">{{item.ProductName}}</ion-title>
+    <ion-title *ngIf="item">{{item.title}}</ion-title>
 
   </ion-toolbar>
 </ion-header>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookDbService } from '../services/book-db.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-details',
@@ -10,7 +11,7 @@ import { BookDbService } from '../services/book-db.service';
 export class DetailsPage implements OnInit {
   item: any;
 
-    constructor(private route: ActivatedRoute, private api: BookDbService) { }
+    constructor(private route: ActivatedRoute, private api: BookDbService, private navCtrl: NavController) { }
 
     ngOnInit() {
       let id = this.route.snapshot.paramMap.get('id');
@@ -18,5 +19,10 @@ export class DetailsPage implements OnInit {
       this.api.getProduct(id).subscribe( response => {
         this.item = response.results[0];
       })
+    }
+
+    goBack() {
+      console.log('go back');
+      this.navCtrl.goBack();
     }
 }
