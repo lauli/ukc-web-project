@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -25,7 +26,7 @@ export class Tab2Page {
   title: string;
   author: string;
 
-  constructor(private api: BookDbService) { }
+  constructor(private api: BookDbService, private navCtrl: NavController) { }
 
   ngOnInit() {
     // this.api.getAllBooks().subscribe( response => {
@@ -40,5 +41,10 @@ export class Tab2Page {
       console.log(this.selectedAge + "" + this.title + "" + this.author);
       console.log(this.books);
     })
+  }
+
+  goToDetailsPageFor(title) {
+    let titleWithoutBrackets = title.split('(')[0];
+    this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
   }
 }

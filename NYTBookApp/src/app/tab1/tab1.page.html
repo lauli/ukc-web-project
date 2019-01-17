@@ -23,7 +23,7 @@
 
   <!-- list view of content -->
   <ion-list>
-  <ion-item button color="light" *ngFor="let item of books" [href]="'/details/' + item.book_details[0].title" routerDirection="forward">
+  <ion-item button color="light" *ngFor="let item of books" (click)="goToDetailsPageFor(item.book_details[0].title, item.amazon_product_url)">
     <ion-label>{{item.book_details[0].title}}<br>
       <span class="sublabel">{{item.book_details[0].description}}</span>
     </ion-label>

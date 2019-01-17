@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
@@ -10,7 +11,7 @@ export class Tab1Page {
   categories: any;
   books: any[] = [];
 
-  constructor(private api: BookDbService) { }
+  constructor(private api: BookDbService, private navCtrl: NavController) { }
 
   ngOnInit() {
     let startCat = 'combined-print-and-e-book-fiction'; // Combined Print and E-Book Fiction
@@ -36,5 +37,10 @@ export class Tab1Page {
       // }
 
     })
+  }
+
+  goToDetailsPageFor(title) {
+    let titleWithoutBrackets = title.split('(')[0];
+    this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
   }
 }
