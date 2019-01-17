@@ -11,21 +11,54 @@
 
 <ion-content padding>
     <ion-list *ngIf="item">
-      <ion-item>{{item.title}} ({{item.contributor}})</ion-item>
-      <ion-item>Author: {{item.author}}</ion-item>
-      <ion-item>Publisher: {{item.publisher}}</ion-item>
-      <ion-item>
-        <ion-badge>{{item.age_group}}</ion-badge>
-        <ion-badge>&#163;{{item.price}}</ion-badge>
-      </ion-item>
-      <ion-item class="details" style="font-style: italic">Ranked: {{item.ranks_history.length}} times</ion-item>
-      <ion-item class="details">{{item.description}}</ion-item>
-    </ion-list>
-    <ion-list *ngIf="reviews">
-      <ion-item>Reviews: </ion-item>
 
-      <ion-item button color="light" *ngFor="let review of reviews">
-        <ion-label class="review-list-item" (click)="openLink(review.url)">{{review.byline}}<br>{{review.summary}}<br>{{review.url}}</ion-label>
+      <ion-item lines="none">
+        <div>
+          <ion-label class="title">{{item.title}}</ion-label>
+          <ion-badge style="background-color: green; margin-right: 5px;"> {{item.ranks_history.length}}x ranked </ion-badge>
+          <ion-badge style="margin-right: 5px;">{{item.age_group}}</ion-badge>
+          <ion-badge> &#163;{{item.price}} </ion-badge>
+        </div>
       </ion-item>
+
+      <hr>
+
+      <ion-item lines="none" style="margin-top: 10px;">
+        <div>
+          <div style="float: left; width: 49%;">
+            <ion-label class="author-name">{{item.author}}</ion-label>
+            <ion-label class="author-underline">Author</ion-label>
+          </div>
+          <div style="float: right; width: 49%;">
+            <ion-label class="author-name">{{item.publisher}}</ion-label>
+            <ion-label class="author-underline">Publisher</ion-label>
+          </div>
+        </div>
+      </ion-item>
+
+      <hr>
+
+      <ion-item class="description" lines="none"><div>{{item.description}}</div></ion-item>
+
+      <hr>
+
+    <ion-item lines="none">
+      <div>
+      <ion-list *ngIf="reviews">
+
+        Reviews:
+
+        <ion-item button *ngFor="let review of reviews" (click)="openLink(review.url)" lines="none">
+          <div class="reviews-item-div">
+            <ion-label class="reviews-byline">{{review.byline}}<br></ion-label>
+            <ion-label class="reviews-summary">{{review.summary}}</ion-label>
+          </div>
+        </ion-item>
+
+      </ion-list>
+      </div>
+
+    </ion-item>
+
     </ion-list>
 </ion-content>

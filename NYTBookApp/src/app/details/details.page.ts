@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BookDbService } from '../services/book-db.service';
 import { NavController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-details',
   templateUrl: './details.page.html',
@@ -27,7 +26,6 @@ export class DetailsPage implements OnInit {
           console.log(response.results);
           this.reviews = response.results;
         }
-
       })
 
     }

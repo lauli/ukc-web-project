@@ -1,8 +1,49 @@
-.details {
-  font-size: 0.9em;
-  margin: 10px 0px;
+ion-item {
+  text-align: center;
+  width: 100%;
 }
 
-.review-list-item {
+div {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+hr {
+  border-width: 0.5px;
+  opacity: 0.75;
+  width: 50%;
+}
+
+.title {
+  font-size: 3em;
+  font-variant: small-caps;
+  font-weight: bold;
+}
+
+.author-name {
+  font-size: 1.2em;
+}
+
+.author-underline {
+  font-size: 0.8em;
+}
+
+.description {
+  margin-top: 10px;
+  padding-bottom: 10px;
   white-space: pre-line;
+}
+
+.reviews-item-div {
+  margin: 10px;
+}
+
+.reviews-byline {
+  font-style: italic;
+}
+
+.reviews-summary {
+  white-space: pre-line;
+  font-size: 0.9em;
 }
