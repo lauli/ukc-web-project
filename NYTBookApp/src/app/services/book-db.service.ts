@@ -26,16 +26,41 @@ export class BookDbService {
     return this.http.get(this.baseUrl + '.json?' + 'api-key=' + this.apiKey + '&list=' + list_name_encoded);
   }
 
-  getProduct(title): Observable<any> {
-    return this.http.get(this.baseUrl + '/best-sellers/history.json.json?' + 'api-key=' + this.apiKey + '&title=' + title);
+  getAllBooks(): Observable<any> {
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey);
   }
 
-  getProductBySearch(keystr, searchType): Observable<any> {
-    if(searchType == 1) {
-      return this.http.get(this.baseUrl + 'product/search/' + keystr);
-    } else {
-      return this.http.get(this.baseUrl + 'product/searchbyname/' + keystr);
+  getBookByISBN(isbn): Observable<any> {
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&isbn=' + isbn);
+  }
 
+  getBookByTitle(title): Observable<any> {
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
+  }
+
+  getBookReviewsByISBN(isbn): Observable<any> {
+    return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&isbn=' + isbn);
+  }
+
+  getBookReviewsByTitle(title): Observable<any> {
+    return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
+  }
+
+  getBooksFrom(selectedAge, title, author): Observable<any> {
+    var additionalInformation = "";
+
+    if (selectedAge != null && selectedAge != '' && selectedAge != 'Not selected') {
+      additionalInformation += "&age-group=" + selectedAge;
     }
+    if (title != null && title != '') {
+      additionalInformation += "&title=" + encodeURIComponent(title);
+    }
+
+    if (author != null && author != '') {
+      additionalInformation += "&author=" + encodeURIComponent(author);
+    }
+
+    console.log(additionalInformation);
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + additionalInformation);
   }
 }

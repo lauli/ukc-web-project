@@ -15,10 +15,17 @@
       <ion-item>Author: {{item.author}}</ion-item>
       <ion-item>Publisher: {{item.publisher}}</ion-item>
       <ion-item>
-        <ion-badge>Cert: {{item.age_group}}</ion-badge>
+        <ion-badge>{{item.age_group}}</ion-badge>
         <ion-badge>&#163;{{item.price}}</ion-badge>
       </ion-item>
       <ion-item class="details" style="font-style: italic">Ranked: {{item.ranks_history.length}} times</ion-item>
       <ion-item class="details">{{item.description}}</ion-item>
+    </ion-list>
+    <ion-list *ngIf="reviews">
+      <ion-item>Reviews: </ion-item>
+
+      <ion-item button color="light" *ngFor="let review of reviews">
+        <ion-label class="review-list-item" (click)="openLink(review.url)">{{review.byline}}<br>{{review.summary}}<br>{{review.url}}</ion-label>
+      </ion-item>
     </ion-list>
 </ion-content>

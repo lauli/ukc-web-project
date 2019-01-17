@@ -1,9 +1,43 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Tab Two
-    </ion-title>
+    <ion-title>Search</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content padding>
+
+  <ion-item>
+    <!-- header -->
+    <ion-label>Age Group</ion-label>
+    <!-- dropdown menu -->
+    <ion-select [(ngModel)]="selectedAge">
+      <ion-select-option *ngFor="let age of ageGroups; let i = index"
+      [selected]="i==0"
+      value="{{age}}">
+        {{age}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Title</ion-label>
+    <ion-input type="text" name="field" [(ngModel)]="title"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Author</ion-label>
+    <ion-input type="text" name="field" [(ngModel)]="author"></ion-input>
+  </ion-item>
+
+  <ion-button shape="round" id="searchButton" (click)="search()">Search</ion-button>
+
+  <!-- list view of content -->
+  <ion-list>
+  <ion-item button color="light" *ngFor="let item of books" [href]="'/details/' + item.title" routerDirection="forward">
+    <ion-label>{{item.title}}<br>
+      <span class="sublabel">{{item.description}}</span>
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+</ion-content>
