@@ -6,6 +6,16 @@
 
     <ion-title *ngIf="item">{{item.title}}</ion-title>
 
+    <ion-buttons slot="end">
+      <button ion-button icon-only (click)="facebookButtonTapped()" style="background-color: white;">
+      <ion-icon name="logo-facebook" style="margin-right: -10px; font-size: 40px; background-color: white;"></ion-icon>
+      </button>
+
+      <button ion-button icon-only (click)="favButtonTapped()" style="background-color: white;">
+        <ion-icon *ngIf="icon" [src]="icon" [color]="primary" style="font-size: 30px; background-color: white;"></ion-icon>
+      </button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -39,6 +49,8 @@
       <hr>
 
       <ion-item class="description" lines="none"><div>{{item.description}}</div></ion-item>
+
+      <ion-item lines="none" *ngIf="amazonUrl" (click)="openLink(amazonUrl)"><div style="color: #003366; font-size: 0.8em;">{{amazonUrl}}</div></ion-item>
 
       <hr>
 

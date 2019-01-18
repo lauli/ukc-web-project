@@ -22,12 +22,12 @@ export class BookDbService {
     return this.http.get(this.baseUrl + '/names.json?' + 'api-key=' + this.apiKey)
   }
 
-  getBooksByCategory(list_name_encoded): Observable<any> {
-    return this.http.get(this.baseUrl + '.json?' + 'api-key=' + this.apiKey + '&list=' + list_name_encoded);
+  getBooksByCategory(list_name_encoded, offset): Observable<any> {
+    return this.http.get(this.baseUrl + '.json?' + 'api-key=' + this.apiKey + '&list=' + list_name_encoded + this.generateOffsetString(offset));
   }
 
-  getAllBooks(): Observable<any> {
-    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey);
+  getAllBooks(offset): Observable<any> {
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + this.generateOffsetString(offset));
   }
 
   getBookByISBN(isbn): Observable<any> {
@@ -35,6 +35,7 @@ export class BookDbService {
   }
 
   getBookByTitle(title): Observable<any> {
+    console.log(title);
     return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
   }
 
@@ -46,7 +47,7 @@ export class BookDbService {
     return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
   }
 
-  getBooksFrom(selectedAge, title, author): Observable<any> {
+  getBooksFrom(selectedAge, title, author, offset): Observable<any> {
     var additionalInformation = "";
 
     if (selectedAge != null && selectedAge != '' && selectedAge != 'Not selected') {
@@ -60,7 +61,15 @@ export class BookDbService {
       additionalInformation += "&author=" + encodeURIComponent(author);
     }
 
-    console.log(additionalInformation);
-    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + additionalInformation);
+    console.log(additionalInformation + ", offset: " + this.generateOffsetString(offset));
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + additionalInformation  + this.generateOffsetString(offset));
+  }
+
+  generateOffsetString(offset): string {
+    var offsetString = "";
+    if (offset != 0 && offset != null) {
+      offsetString = "&offset=" + offset;
+    }
+    return offsetString;
   }
 }

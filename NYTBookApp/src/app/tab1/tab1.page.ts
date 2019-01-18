@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
 import { NavController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-tab1',
@@ -11,7 +12,7 @@ export class Tab1Page {
   categories: any;
   books: any[] = [];
 
-  constructor(private api: BookDbService, private navCtrl: NavController) { }
+  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage) { }
 
   ngOnInit() {
     let startCat = 'combined-print-and-e-book-fiction'; // Combined Print and E-Book Fiction
@@ -21,26 +22,40 @@ export class Tab1Page {
       console.log(this.categories);
     })
 
-    this.api.getBooksByCategory(startCat).subscribe( response => {
-      this.books = response.results;
-      console.log(this.books);
-    })
+    this.changeCategory(startCat);
   }
 
   changeCategory(list_name_encoded) {
-    this.api.getBooksByCategory(list_name_encoded).subscribe( response => {
+    this.api.getBooksByCategory(list_name_encoded, 0).subscribe( response => {
       this.books = response.results;
-      console.log(this.books);
-      // for (let book of response.results) {
-      //   console.log(book.book_details);
-      //   this.books.push(book.book_details)
-      // }
+      console.log(response);
 
-    })
+      if (response.num_results > 100) {
+        this.requestMore(list_name_encoded, 4);
+      } else if (response.num_results > 80) {
+        this.requestMore(list_name_encoded, 3);
+      } else if (response.num_results > 60) {
+        this.requestMore(list_name_encoded, 2);
+      } else if (response.num_results > 40) {
+        this.requestMore(list_name_encoded, 1);
+      }
+      console.log(this.books);
+
+    });
   }
 
-  goToDetailsPageFor(title) {
+  requestMore(list_name_encoded, times) {
+    for (var index = 1; index <= times; index++) {
+      this.api.getBooksByCategory(list_name_encoded, index*20).subscribe( response => {
+        this.books.push(response.results);
+      });
+    }
+  }
+
+  goToDetailsPageFor(title, amazonUrl) {
     let titleWithoutBrackets = title.split('(')[0];
     this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
+    this.storage.set('amazon_product_url', amazonUrl);
+    this.storage.set('coming_from', 'tab1');
   }
 }

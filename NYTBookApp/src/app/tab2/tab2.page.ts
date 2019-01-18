@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
 import { NavController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-tab2',
@@ -26,7 +27,7 @@ export class Tab2Page {
   title: string;
   author: string;
 
-  constructor(private api: BookDbService, private navCtrl: NavController) { }
+  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage) { }
 
   ngOnInit() {
     // this.api.getAllBooks().subscribe( response => {
@@ -36,15 +37,43 @@ export class Tab2Page {
   }
 
   search() {
-    this.api.getBooksFrom(this.selectedAge, this.title, this.author).subscribe ( response => {
+    this.api.getBooksFrom(this.selectedAge, this.title, this.author, 0).subscribe ( response => {
       this.books = response.results;
       console.log(this.selectedAge + "" + this.title + "" + this.author);
       console.log(this.books);
+
+      console.log(response);
+
+      if (response.num_results > 100) {
+        this.requestMore(4);
+      } else if (response.num_results > 80) {
+        this.requestMore(3);
+      } else if (response.num_results > 60) {
+        this.requestMore(2);
+      } else if (response.num_results > 40) {
+        this.requestMore(1);
+      }
     })
   }
 
-  goToDetailsPageFor(title) {
+  requestMore(times) {
+    for (var index = 1; index <= times; index++) {
+      this.api.getBooksFrom(this.selectedAge, this.title, this.author, index*20).subscribe ( response => {
+        console.log(response.results);
+        this.books = this.books.concat(response.results);
+        // for (var book in response.results) {
+        //   console.log(book);
+        //   this.books.push(book);
+        // }
+        console.log(this.books);
+      });
+    }
+  }
+
+  goToDetailsPageFor(title, amazonUrl) {
     let titleWithoutBrackets = title.split('(')[0];
-    this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
+    this.navCtrl.navigateForward('/details/' + titleWithoutBrackets.replace('#', ''));
+    this.storage.set('amazon_product_url', amazonUrl);
+    this.storage.set('coming_from', 'tab2');
   }
 }
