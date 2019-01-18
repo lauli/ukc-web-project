@@ -19,8 +19,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-    <ion-list *ngIf="item">
+<ion-content padding *ngIf="item">
+
 
       <ion-item lines="none">
         <div>
@@ -31,7 +31,7 @@
         </div>
       </ion-item>
 
-      <hr>
+      <img src="assets/book-open.png" alt="detailsPageImage" stlye="height: 15%; margin-left: -30px;">
 
       <ion-item lines="none" style="margin-top: 10px;">
         <div>
@@ -72,5 +72,4 @@
 
     </ion-item>
 
-    </ion-list>
 </ion-content>

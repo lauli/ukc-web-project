@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookDbService } from '../services/book-db.service';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-details',
@@ -19,7 +21,13 @@ export class DetailsPage implements OnInit {
   isFav: boolean = false;
   favArray: Array<string> = [];
 
-    constructor(private route: ActivatedRoute, private api: BookDbService, private navCtrl: NavController, private storage: Storage) {
+  message = "Hi People! Guess what, I found a really cool book named \"" + this.title + "\" on NYT's Bestseller List and hope to read it soon. Check it out too!"
+
+
+    constructor(private route: ActivatedRoute, private api: BookDbService,
+      private navCtrl: NavController, private storage: Storage,
+      private socialSharing: SocialSharing, private file: File,
+      private toastCtrl: ToastController) {
       this.title = this.route.snapshot.paramMap.get('title');
       console.log(this.title);
 
@@ -41,7 +49,7 @@ export class DetailsPage implements OnInit {
     }
 
     ngOnInit() {
-      this.api.getBookByTitle(this.title, 0).subscribe( response => {
+      this.api.getBookByTitle(this.title).subscribe( response => {
         this.item = response.results[0];
         console.log(this.item);
       })
@@ -58,6 +66,43 @@ export class DetailsPage implements OnInit {
         this.amazonUrl = url;
       });
 
+    }
+
+    async facebookButtonTapped() {
+      let file = await this.resolveLocalFile();
+
+      this.socialSharing.shareViaFacebook(null, file.nativeURL, null).then(() => {
+        this.removeTempFile(file.name);
+      }).catch((e) => {
+        console.log('Error while sharing on FB: ' + e);
+      });
+    }
+
+    twitterButtonTapped() {
+    this.socialSharing.shareViaTwitter(null, null, this.amazonUrl).then(() => {
+      // Success
+    }).catch((e) => {
+      console.log('Error while sharing on Twitter: ' + e);
+    });
+  }
+
+  async WAButtonTapped() {
+    let file = await this.resolveLocalFile();
+
+    this.socialSharing.shareViaWhatsApp(this.message, file.nativeURL, null).then(() => {
+      this.removeTempFile(file.name);
+    }).catch((e) => {
+      console.log('Error while sharing on WA: ' + e);
+    });
+  }
+
+    // https://ionicacademy.com/ionic-social-sharing/
+    async resolveLocalFile() {
+      return this.file.copyFile('${this.file.applicationDirectory}www/assets/', 'books-open.png', this.file.cacheDirectory, '${new Date().getTime()}.jpg');
+    }
+
+    removeTempFile(name) {
+      this.file.removeFile(this.file.cacheDirectory, name);
     }
 
     favButtonTapped() {
