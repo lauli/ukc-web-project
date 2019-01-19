@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Randomizer</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+    <ion-card style="padding: 10px" *ngIf="item">
+
+      <ion-item lines="none">
+        <div>
+          <ion-label class="title">{{item.title}}</ion-label>
+          <ion-badge style="background-color: green; margin-right: 5px;"> {{item.ranks_history.length}}x ranked </ion-badge>
+          <ion-badge style="margin-right: 5px;">{{item.age_group}}</ion-badge>
+          <ion-badge> &#163;{{item.price}} </ion-badge>
+        </div>
+      </ion-item>
+
+      <img src="assets/book-open.png" alt="detailsPageImage" stlye="height: 15%; margin-left: -30px;">
+
+      <ion-item lines="none" style="margin-top: 10px;">
+        <div>
+          <div style="float: left; width: 49%;">
+            <ion-label class="author-name">{{item.author}}</ion-label>
+            <ion-label class="author-underline">Author</ion-label>
+          </div>
+          <div style="float: right; width: 49%;">
+            <ion-label class="author-name">{{item.publisher}}</ion-label>
+            <ion-label class="author-underline">Publisher</ion-label>
+          </div>
+        </div>
+      </ion-item>
+
+      <hr>
+
+      <ion-item class="description" lines="none"><div>{{item.description}}</div></ion-item>
+
+      <ion-row style="text-align: center;">
+        <ion-col>
+          <button ion-button icon-only (click)="WAButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-whatsapp" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+
+          <button ion-button icon-only (click)="twitterButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-twitter" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+
+          <button ion-button icon-only (click)="facebookButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-facebook" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+
+          <button ion-button icon-only (click)="favButtonTapped()" style="background-color: white;">
+            <ion-icon *ngIf="icon" [src]="icon" [color]="primary" style="font-size: 25px; background-color: white;"></ion-icon>
+          </button>
+      </ion-col>
+      </ion-row>
+
+      <ion-item lines="none" *ngIf="amazonUrl" (click)="openLink(amazonUrl)"><div style="color: #003366; font-size: 0.8em;">{{amazonUrl}}</div></ion-item>
+
+      <hr>
+
+    <ion-item lines="none">
+      <div>
+      <ion-list *ngIf="reviews">
+
+        <ion-label *ngIf="reviewString">{{reviewString}}</ion-label>
+
+        <ion-item button *ngFor="let review of reviews" (click)="openLink(review.url)" lines="none">
+          <div class="reviews-item-div">
+            <ion-label class="reviews-byline">{{review.byline}}<br></ion-label>
+            <ion-label class="reviews-summary">{{review.summary}}</ion-label>
+          </div>
+        </ion-item>
+
+      </ion-list>
+      </div>
+
+    </ion-item>
+
+  </ion-card>
+
+  <div style="text-align: center;">
+    <ion-button shape="round" (click)="randomize()">Find me a new random book!</ion-button>
+  </div>
+
+</ion-content>

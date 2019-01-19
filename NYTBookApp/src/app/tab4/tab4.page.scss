@@ -1,0 +1,53 @@
+ion-item {
+  text-align: center;
+  width: 100%;
+}
+
+div {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  white-space: pre-line;
+}
+
+hr {
+  border-width: 0.5px;
+  opacity: 0.75;
+  width: 50%;
+}
+
+.title {
+  font-size: 3em;
+  font-variant: small-caps;
+  font-weight: bold;
+  white-space: pre-line;
+}
+
+.author-name {
+  font-size: 1.2em;
+  white-space: pre-line;
+}
+
+.author-underline {
+  font-size: 0.8em;
+  white-space: pre-line;
+}
+
+.description {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  white-space: pre-line;
+}
+
+.reviews-item-div {
+  margin: 10px;
+}
+
+.reviews-byline {
+  font-style: italic;
+}
+
+.reviews-summary {
+  white-space: pre-line;
+  font-size: 0.9em;
+}

@@ -6,11 +6,11 @@ import { Storage } from '@ionic/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.page.html',
-  styleUrls: ['./details.page.scss'],
+  selector: 'app-tab4',
+  templateUrl: 'tab4.page.html',
+  styleUrls: ['tab4.page.scss']
 })
-export class DetailsPage implements OnInit {
+export class Tab4Page {
   title: string;
 
   item: any;
@@ -26,12 +26,31 @@ export class DetailsPage implements OnInit {
 
     constructor(private route: ActivatedRoute, private api: BookDbService,
       private navCtrl: NavController, private storage: Storage,
-      private socialSharing: SocialSharing,
-      private toastCtrl: ToastController) {
+      private socialSharing: SocialSharing, private toastCtrl: ToastController) {
 
-      this.title = this.route.snapshot.paramMap.get('title');
-      console.log(this.title);
+      this.getRandomBook();
+    }
 
+    getRandomBook() {
+      let max = 31823;
+      let randomOffset = Math.floor(Math.random() * ((max/20) - 0 + 1)) + 0;
+      let randomArrayElement = Math.floor(Math.random() * (19 - 0 + 1)) + 0;
+
+      this.api.getAllBooks(randomOffset*20).subscribe( response => {
+        this.item = response.results[randomArrayElement];
+        console.log("Result: " + response.results[randomArrayElement]);
+        if (this.item.title == null || this.item.title == '') {
+          this.getRandomBook();
+          return;
+
+        } else {
+          this.title = this.item.title;
+          this.setup();
+        }
+      });
+    }
+
+    setup() {
       this.message = "Hi People! Guess what, I found a really cool book named \"" + this.title + "\" on NYT's Bestseller List and hope to read it soon. Check it out too!"
       this.reviewString = "";
       this.icon = 'assets/icons/bookmark.svg';
@@ -49,18 +68,10 @@ export class DetailsPage implements OnInit {
           }
         }
       });
-    }
-
-    ngOnInit() {
-      this.api.getBookByTitle(this.title).subscribe( response => {
-        this.item = response.results[0];
-        console.log(this.item);
-      })
-
 
       this.api.getBookReviewsByTitle(this.title).subscribe( response => {
 
-        console.log(response.results);
+        console.log("Reviews: " + response.results);
 
         if (response.results != null && response.results.length != 0) {
           console.log("in here");
@@ -68,16 +79,13 @@ export class DetailsPage implements OnInit {
           this.reviewString = "Reviews:"
         }
       })
-
-      this.storage.get('amazon_product_url').then((url) => {
-        if (url != '') {
-          this.amazonUrl = url;
-        }
-      });
-
     }
 
-// https://ionicacademy.com/ionic-social-sharing/
+    randomize() {
+      this.getRandomBook();
+    }
+
+    // https://ionicacademy.com/ionic-social-sharing/
     facebookButtonTapped() {
       this.socialSharing.shareViaFacebook(this.message, null, this.amazonUrl).then(() => {
         //

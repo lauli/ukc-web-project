@@ -14,7 +14,8 @@ export class Tab3Page {
 
   constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage) { }
 
-  ngOnInit() {
+  ionViewWillEnter() {
+    this.books = [];
     this.storage.get('favoriteBooks').then((bookTitles) => {
       console.log(bookTitles);
 
@@ -30,7 +31,7 @@ export class Tab3Page {
   goToDetailsPageFor(title) {
     let titleWithoutBrackets = title.split('(')[0];
     this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
-    //this.storage.set('amazon_product_url', amazonUrl);
+    this.storage.set('amazon_product_url', '');
     this.storage.set('coming_from', 'tab3');
   }
 }
