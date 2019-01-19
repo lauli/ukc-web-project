@@ -7,12 +7,8 @@
     <ion-title *ngIf="item">{{item.title}}</ion-title>
 
     <ion-buttons slot="end">
-      <button ion-button icon-only (click)="facebookButtonTapped()" style="background-color: white;">
-      <ion-icon name="logo-facebook" style="margin-right: -10px; font-size: 40px; background-color: white;"></ion-icon>
-      </button>
-
       <button ion-button icon-only (click)="favButtonTapped()" style="background-color: white;">
-        <ion-icon *ngIf="icon" [src]="icon" [color]="primary" style="font-size: 30px; background-color: white;"></ion-icon>
+        <ion-icon *ngIf="icon" [src]="icon" [color]="primary" style="font-size: 20px; background-color: white;"></ion-icon>
       </button>
     </ion-buttons>
 
@@ -50,6 +46,22 @@
 
       <ion-item class="description" lines="none"><div>{{item.description}}</div></ion-item>
 
+      <ion-row style="text-align: center;">
+        <ion-col>
+          <button ion-button icon-only (click)="WAButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-whatsapp" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+
+          <button ion-button icon-only (click)="twitterButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-twitter" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+
+          <button ion-button icon-only (click)="facebookButtonTapped()" style="background-color: white;">
+          <ion-icon name="logo-facebook" style="font-size: 30px; background-color: white;"></ion-icon>
+          </button>
+      </ion-col>
+      </ion-row>
+
       <ion-item lines="none" *ngIf="amazonUrl" (click)="openLink(amazonUrl)"><div style="color: #003366; font-size: 0.8em;">{{amazonUrl}}</div></ion-item>
 
       <hr>
@@ -58,7 +70,7 @@
       <div>
       <ion-list *ngIf="reviews">
 
-        Reviews:
+        <ion-label *ngIf="reviewString">{{reviewString}}</ion-label>
 
         <ion-item button *ngFor="let review of reviews" (click)="openLink(review.url)" lines="none">
           <div class="reviews-item-div">
