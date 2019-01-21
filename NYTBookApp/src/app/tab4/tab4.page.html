@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Randomizer</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
 
-    <ion-card style="padding: 10px" *ngIf="item">
+    <ion-card *ngIf="item" (swipe)="randomize()">
 
       <ion-item lines="none">
         <div>
@@ -17,22 +17,23 @@
         </div>
       </ion-item>
 
-      <img src="assets/book-open.png" alt="detailsPageImage" stlye="height: 15%; margin-left: -30px;">
+      <a href='https://www.freepik.com/free-photo/opened-book-and-coffee-with-bouquet_1459905.htm'>
+        <img src="assets/book.png" alt="detailsPageImage" stlye="height: 15%; margin-left: -30px;">
+      </a>
 
-      <ion-item lines="none" style="margin-top: 10px;">
-        <div>
-          <div style="float: left; width: 49%;">
-            <ion-label class="author-name">{{item.author}}</ion-label>
-            <ion-label class="author-underline">Author</ion-label>
-          </div>
-          <div style="float: right; width: 49%;">
-            <ion-label class="author-name">{{item.publisher}}</ion-label>
-            <ion-label class="author-underline">Publisher</ion-label>
-          </div>
-        </div>
+      <ion-item>
+        Author
+        <ion-label style="text-align: right; color: #d3d3d3; white-space: pre-line;">
+          {{item.author}}
+        </ion-label>
       </ion-item>
 
-      <hr>
+      <ion-item>
+        Publisher
+        <ion-label item-end style="text-align: right; color: #d3d3d3; white-space: pre-line;">
+          {{item.publisher}}
+        </ion-label>
+      </ion-item>
 
       <ion-item class="description" lines="none"><div>{{item.description}}</div></ion-item>
 

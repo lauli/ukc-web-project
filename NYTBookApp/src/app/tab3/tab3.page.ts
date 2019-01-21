@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
-import { NavController } from '@ionic/angular';
+import { NavController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -10,21 +10,27 @@ import { Storage } from '@ionic/storage';
 })
 export class Tab3Page {
   categories: any;
-  books: any[] = [];
+  books: string[];
 
-  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage) { }
+  booksMap: Map<string, string>;
 
-  ionViewWillEnter() {
+  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage, public loadingCtrl: LoadingController) { }
+
+  async ionViewWillEnter() {
     this.books = [];
-    this.storage.get('favoriteBooks').then((bookTitles) => {
-      console.log(bookTitles);
 
-      for (var title of bookTitles) {
-        this.api.getBookByTitle(title).subscribe( response => {
-          this.books.push(response.results[0])
-          console.log(response.results[0]);
-        })
+    this.storage.get('favoriteBooks').then((bookJSON) => {
+      if (bookJSON == '' || bookJSON == undefined) {
+        return;
       }
+
+      this.booksMap = new Map(JSON.parse(bookJSON));
+      console.log(this.booksMap);
+
+      this.booksMap.forEach((author: string, title: string) => {
+        this.books.push(title);
+      });
+
     });
   }
 
@@ -33,5 +39,8 @@ export class Tab3Page {
     this.navCtrl.navigateForward('/details/' + titleWithoutBrackets);
     this.storage.set('amazon_product_url', '');
     this.storage.set('coming_from', 'tab3');
+
+    let author = this.booksMap.get(title);
+    this.storage.set('author', author);
   }
 }

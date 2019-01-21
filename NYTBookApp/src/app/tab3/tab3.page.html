@@ -1,16 +1,14 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Favorites</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
-      <ion-item button *ngFor="let item of books" (click)="goToDetailsPageFor(item.title)" style="background-color: white;" lines="none">
+      <ion-item button *ngFor="let item of books" (click)="goToDetailsPageFor(item)" style="background-color: white;" lines="none">
         <ion-card style="padding: 10px">
-          <ion-label>{{item.title}}<br>
-            <span class="sublabel">{{item.description}}</span>
-          </ion-label>
+          <ion-label>{{item}}</ion-label>
         </ion-card>
       </ion-item>
 </ion-list>

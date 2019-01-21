@@ -23,8 +23,7 @@ import { File } from '@ionic-native/file/ngx';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    SocialSharing,
-    File
+    SocialSharing
   ],
   bootstrap: [AppComponent]
 })

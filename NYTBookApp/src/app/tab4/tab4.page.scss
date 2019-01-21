@@ -1,3 +1,10 @@
+ion-card{
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
 ion-item {
   text-align: center;
   width: 100%;
@@ -17,7 +24,7 @@ hr {
 }
 
 .title {
-  font-size: 3em;
+  font-size: 2em;
   font-variant: small-caps;
   font-weight: bold;
   white-space: pre-line;

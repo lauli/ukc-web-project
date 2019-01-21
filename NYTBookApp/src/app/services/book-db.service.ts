@@ -34,9 +34,9 @@ export class BookDbService {
     return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&isbn=' + isbn);
   }
 
-  getBookByTitle(title): Observable<any> {
+  getBookByTitle(title, offset): Observable<any> {
     console.log(title);
-    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
+    return this.http.get(this.baseUrl + '/best-sellers/history.json?' + 'api-key=' + this.apiKey + '&title=' + encodeURIComponent(title) + this.generateOffsetString(offset));
   }
 
   getBookReviewsByISBN(isbn): Observable<any> {

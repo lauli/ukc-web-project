@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Search</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -11,8 +11,7 @@
     <ion-label>Age Group</ion-label>
     <!-- dropdown menu -->
     <ion-select [(ngModel)]="selectedAge">
-      <ion-select-option *ngFor="let age of ageGroups; let i = index"
-      [selected]="i==0"
+      <ion-select-option *ngFor="let age of ageGroups;"
       value="{{age}}">
         {{age}}
       </ion-select-option>
@@ -30,12 +29,12 @@
   </ion-item>
 
   <div style="text-align: center;">
-  <ion-button shape="round" id="searchButton" (click)="search()">Search</ion-button>
+  <ion-button shape="round" id="searchButton" (click)="search()"><ion-icon name="search"></ion-icon> Search</ion-button>
   </div>
 
   <!-- list view of content -->
   <ion-list>
-  <ion-item button color="light" *ngFor="let item of books" (click)="goToDetailsPageFor(item.title)">
+  <ion-item button color="light" *ngFor="let item of books" (click)="goToDetailsPageFor(item.title, item.author)">
     <ion-label>{{item.title}}<br>
       <span class="sublabel">{{item.description}}</span>
     </ion-label>

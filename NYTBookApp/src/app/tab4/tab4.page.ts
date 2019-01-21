@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookDbService } from '../services/book-db.service';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
@@ -26,27 +26,33 @@ export class Tab4Page {
 
     constructor(private route: ActivatedRoute, private api: BookDbService,
       private navCtrl: NavController, private storage: Storage,
-      private socialSharing: SocialSharing, private toastCtrl: ToastController) {
+      private socialSharing: SocialSharing, public loadingCtrl: LoadingController) {
 
       this.getRandomBook();
     }
 
-    getRandomBook() {
+    async getRandomBook() {
       let max = 31823;
       let randomOffset = Math.floor(Math.random() * ((max/20) - 0 + 1)) + 0;
       let randomArrayElement = Math.floor(Math.random() * (19 - 0 + 1)) + 0;
 
-      this.api.getAllBooks(randomOffset*20).subscribe( response => {
-        this.item = response.results[randomArrayElement];
-        console.log("Result: " + response.results[randomArrayElement]);
-        if (this.item.title == null || this.item.title == '') {
-          this.getRandomBook();
-          return;
+      const loading = await this.loadingCtrl.create({});
 
-        } else {
-          this.title = this.item.title;
-          this.setup();
-        }
+      loading.present().then(() => {
+
+        this.api.getAllBooks(randomOffset*20).subscribe( response => {
+          this.item = response.results[randomArrayElement];
+          console.log("Result: " + response.results[randomArrayElement]);
+          if (this.item.title == null || this.item.title == '') {
+            this.getRandomBook();
+            return;
+
+          } else {
+            this.title = this.item.title;
+            this.setup();
+            loading.dismiss();
+          }
+        });
       });
     }
 
@@ -54,6 +60,7 @@ export class Tab4Page {
       this.message = "Hi People! Guess what, I found a really cool book named \"" + this.title + "\" on NYT's Bestseller List and hope to read it soon. Check it out too!"
       this.reviewString = "";
       this.icon = 'assets/icons/bookmark.svg';
+      this.reviews = null;
 
       this.storage.get('favoriteBooks').then((bookTitles) => {
         if (bookTitles == null) {

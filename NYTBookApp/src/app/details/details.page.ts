@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookDbService } from '../services/book-db.service';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController, LoadingController} from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
@@ -20,14 +20,15 @@ export class DetailsPage implements OnInit {
 
   icon: string;
   isFav: boolean = false;
-  favArray: Array<string> = [];
+  favArray: Map<string, string>;
 
   message: string;
 
-    constructor(private route: ActivatedRoute, private api: BookDbService,
-      private navCtrl: NavController, private storage: Storage,
-      private socialSharing: SocialSharing,
-      private toastCtrl: ToastController) {
+  author: string;
+
+  constructor(private route: ActivatedRoute, private api: BookDbService,
+    private navCtrl: NavController, private storage: Storage,
+    private socialSharing: SocialSharing, public loadingCtrl: LoadingController) {
 
       this.title = this.route.snapshot.paramMap.get('title');
       console.log(this.title);
@@ -35,33 +36,25 @@ export class DetailsPage implements OnInit {
       this.message = "Hi People! Guess what, I found a really cool book named \"" + this.title + "\" on NYT's Bestseller List and hope to read it soon. Check it out too!"
       this.reviewString = "";
       this.icon = 'assets/icons/bookmark.svg';
+      this.favArray = new Map<string, string>();
 
-      this.storage.get('favoriteBooks').then((bookTitles) => {
-        if (bookTitles == null) {
-          return;
-        }
-        this.favArray = bookTitles;
-
-        for (var title of bookTitles) {
-          if (title == this.title) {
-            this.icon = 'assets/icons/bookmark-full.svg';
-            this.isFav = true;
-          }
-        }
+      this.storage.get('author').then((author) => {
+        this.author = author;
       });
     }
 
-    ngOnInit() {
-      this.api.getBookByTitle(this.title).subscribe( response => {
-        this.item = response.results[0];
-        console.log(this.item);
-      })
+    async ngOnInit() {
+      var offset = 0;
+      const loading = await this.loadingCtrl.create({});
 
+      loading.present().then(() => {
+        this.api.getBookByTitle(this.title, 0).subscribe( response => {
+          console.log(response);
+          this.requestMore(response.num_results%20, loading);
+        });
+      });
 
       this.api.getBookReviewsByTitle(this.title).subscribe( response => {
-
-        console.log(response.results);
-
         if (response.results != null && response.results.length != 0) {
           console.log("in here");
           this.reviews = response.results;
@@ -74,10 +67,65 @@ export class DetailsPage implements OnInit {
           this.amazonUrl = url;
         }
       });
-
+      this.storage.get('author').then((author) => {
+        if (author != '') {
+          this.author = author;
+        }
+      });
     }
 
-// https://ionicacademy.com/ionic-social-sharing/
+    requestMore(times, loading) {
+      for (var index = 0; index < times; index++) {
+        this.api.getBookByTitle(this.title, index*20).subscribe ( response => {
+          for (var item of response.results) {
+            console.log(item.author + " -- " + this.author);
+            if (this.isCurrentBookSameAs(item.title, item.author)) {
+              this.item = item;
+              console.log(item);
+              loading.dismiss();
+              this.setupFavButton()
+              return;
+            }
+          }
+        });
+      }
+    }
+
+
+    isCurrentBookSameAs(title, author): boolean {
+      console.log(this.item);
+      if (title == this.title && author == this.author) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    setupFavButton() {
+      this.storage.get('favoriteBooks').then((bookJSON) => {
+
+        if (bookJSON == "" || bookJSON == null) {
+          return;
+        }
+        var books: Map<string, string> = new Map(JSON.parse(bookJSON));
+        console.log("aslhfls " + books + books.size);
+
+        if (books == null || !(books.size > 0)) {
+          console.log("NOT DKAJKDJAKJK");
+          return;
+        }
+        this.favArray = books;
+
+        books.forEach((author: string, title: string) => {
+          if (this.isCurrentBookSameAs(title, author)) {
+            this.icon = 'assets/icons/bookmark-full.svg';
+            this.isFav = true;
+          }
+        });
+      });
+    }
+
+    // https://ionicacademy.com/ionic-social-sharing/
     facebookButtonTapped() {
       this.socialSharing.shareViaFacebook(this.message, null, this.amazonUrl).then(() => {
         //
@@ -87,20 +135,20 @@ export class DetailsPage implements OnInit {
     }
 
     twitterButtonTapped() {
-    this.socialSharing.shareViaTwitter(this.message, null, this.amazonUrl).then(() => {
-      // Success
-    }).catch((e) => {
-      console.log('Error while sharing on Twitter: ' + e);
-    });
-  }
+      this.socialSharing.shareViaTwitter(this.message, null, this.amazonUrl).then(() => {
+        // Success
+      }).catch((e) => {
+        console.log('Error while sharing on Twitter: ' + e);
+      });
+    }
 
-  WAButtonTapped() {
-    this.socialSharing.shareViaWhatsApp(this.message, null, this.amazonUrl).then(() => {
-      //
-    }).catch((e) => {
-      console.log('Error while sharing on WA: ' + e);
-    });
-  }
+    WAButtonTapped() {
+      this.socialSharing.shareViaWhatsApp(this.message, null, this.amazonUrl).then(() => {
+        //
+      }).catch((e) => {
+        console.log('Error while sharing on WA: ' + e);
+      });
+    }
 
     favButtonTapped() {
       if (this.isFav) {
@@ -119,21 +167,19 @@ export class DetailsPage implements OnInit {
     }
 
     deleteCurrentBookFromFavs() {
-      let index = this.favArray.indexOf(this.title);
-      if (index !== -1) {
-          this.favArray.splice(index, 1);
-          this.storage.set('favoriteBooks', this.favArray);
-      }
+      this.favArray.delete(this.title);
+      this.storage.set('favoriteBooks', JSON.stringify(Array.from(this.favArray)));
     }
 
     addCurrentBookFromFavs() {
-      this.favArray.push(this.title);
-      this.storage.set('favoriteBooks', this.favArray);
+      this.favArray.set(this.title, this.author);
+      console.log(this.favArray);
+      this.storage.set('favoriteBooks', JSON.stringify(Array.from(this.favArray)));
     }
 
     printFavs() {
-      this.storage.get('favoriteBooks').then((bookTitles) => {
-        console.log(bookTitles);
+      this.storage.get('favoriteBooks').then((json) => {
+        console.log(json);
       });
     }
 
@@ -147,4 +193,4 @@ export class DetailsPage implements OnInit {
         this.navCtrl.navigateBack('tabs/' + url);
       });
     }
-}
+  }

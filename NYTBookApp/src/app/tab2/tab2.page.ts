@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BookDbService } from '../services/book-db.service';
-import { NavController } from '@ionic/angular';
+import { NavController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -9,7 +9,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-  ageGroups: any[] = ["Not selected", "", "Ages 2 to 6",
+  ageGroups: any[] = ["Not selected", "Ages 2 to 6",
                   "Ages 3 to 5", "Ages 3 to 6", "Ages 3 to 7", "Ages 3 to 8",
                   "Ages 4 to 7", "Ages 4 to 8", "Ages 4 and up",
                   "Ages 5 to 8", "Ages 5 to 9", "Ages 5 to 10", "Ages 5 and up",
@@ -27,7 +27,7 @@ export class Tab2Page {
   title: string;
   author: string;
 
-  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage) { }
+  constructor(private api: BookDbService, private navCtrl: NavController, private storage: Storage, public loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     // this.api.getAllBooks().subscribe( response => {
@@ -36,24 +36,33 @@ export class Tab2Page {
     // })
   }
 
-  search() {
-    this.api.getBooksFrom(this.selectedAge, this.title, this.author, 0).subscribe ( response => {
-      this.books = response.results;
-      console.log(this.selectedAge + "" + this.title + "" + this.author);
-      console.log(this.books);
+  async search() {
+    if (this.selectedAge == "Not selected") {
+      this.selectedAge = "";
+    }
 
-      console.log(response);
+    const loading = await this.loadingCtrl.create({});
 
-      if (response.num_results > 100) {
-        this.requestMore(4);
-      } else if (response.num_results > 80) {
-        this.requestMore(3);
-      } else if (response.num_results > 60) {
-        this.requestMore(2);
-      } else if (response.num_results > 40) {
-        this.requestMore(1);
-      }
-    })
+    loading.present().then(() => {
+      this.api.getBooksFrom(this.selectedAge, this.title, this.author, 0).subscribe ( response => {
+        this.books = response.results;
+        console.log(this.selectedAge + "" + this.title + "" + this.author);
+        console.log(this.books);
+
+        console.log(response);
+
+        if (response.num_results > 100) {
+          this.requestMore(4);
+        } else if (response.num_results > 80) {
+          this.requestMore(3);
+        } else if (response.num_results > 60) {
+          this.requestMore(2);
+        } else if (response.num_results > 40) {
+          this.requestMore(1);
+        }
+        loading.dismiss();
+      });
+    });
   }
 
   requestMore(times) {
@@ -70,10 +79,11 @@ export class Tab2Page {
     }
   }
 
-  goToDetailsPageFor(title, amazonUrl) {
+  goToDetailsPageFor(title, author) {
     let titleWithoutBrackets = title.split('(')[0];
     this.navCtrl.navigateForward('/details/' + titleWithoutBrackets.replace('#', ''));
-    this.storage.set('amazon_product_url', amazonUrl);
+    this.storage.set('amazon_product_url', '');
+    this.storage.set('author', author);
     this.storage.set('coming_from', 'tab2');
   }
 }
