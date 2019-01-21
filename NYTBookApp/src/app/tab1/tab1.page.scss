@@ -4,13 +4,33 @@
 // }
 
 ion-item {
-  background-color: #fff;
+  background-color: white;
   width: 95%;
   margin: 10px auto;
   font-weight: bold;
   border-radius: 20px;
 }
 
-.sublabel {
-  font-size: var(--les-small);
+// https://github.com/ionic-team/ionic-preview-app/blob/master/src/pages/cards/background/template.html
+ion-card {
+  position: relative;
+  text-align: center;
+}
+
+.card-title {
+  position: absolute;
+  top: 40%;
+  font-size: 1.5em;
+  width: 100%;
+  font-weight: bold;
+  color: #fff;
+  white-space: normal;
+}
+
+.card-subtitle {
+  font-size: 0.8em;
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  color: #fff;
 }

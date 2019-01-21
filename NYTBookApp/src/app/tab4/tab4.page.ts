@@ -20,7 +20,7 @@ export class Tab4Page {
 
   icon: string;
   isFav: boolean = false;
-  favArray: Array<string> = [];
+  favArray: Map<string, string>;
 
   message: string;
 
@@ -29,6 +29,7 @@ export class Tab4Page {
       private socialSharing: SocialSharing, public loadingCtrl: LoadingController) {
 
       this.getRandomBook();
+      this.favArray = new Map<string, string>();
     }
 
     async getRandomBook() {
@@ -62,19 +63,7 @@ export class Tab4Page {
       this.icon = 'assets/icons/bookmark.svg';
       this.reviews = null;
 
-      this.storage.get('favoriteBooks').then((bookTitles) => {
-        if (bookTitles == null) {
-          return;
-        }
-        this.favArray = bookTitles;
-
-        for (var title of bookTitles) {
-          if (title == this.title) {
-            this.icon = 'assets/icons/bookmark-full.svg';
-            this.isFav = true;
-          }
-        }
-      });
+      this.setupFavButton();
 
       this.api.getBookReviewsByTitle(this.title).subscribe( response => {
 
@@ -86,6 +75,39 @@ export class Tab4Page {
           this.reviewString = "Reviews:"
         }
       })
+    }
+
+    isCurrentBookSameAs(title, author): boolean {
+      console.log(this.item);
+      if (title == this.title && author == this.item.author) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    setupFavButton() {
+      this.storage.get('favoriteBooks').then((bookJSON) => {
+
+        if (bookJSON == "" || bookJSON == null) {
+          return;
+        }
+        var books: Map<string, string> = new Map(JSON.parse(bookJSON));
+        console.log("aslhfls " + books + books.size);
+
+        if (books == null || !(books.size > 0)) {
+          console.log("NOT DKAJKDJAKJK");
+          return;
+        }
+        this.favArray = books;
+
+        books.forEach((author: string, title: string) => {
+          if (this.isCurrentBookSameAs(title, author)) {
+            this.icon = 'assets/icons/bookmark-full.svg';
+            this.isFav = true;
+          }
+        });
+      });
     }
 
     randomize() {
@@ -134,16 +156,14 @@ export class Tab4Page {
     }
 
     deleteCurrentBookFromFavs() {
-      let index = this.favArray.indexOf(this.title);
-      if (index !== -1) {
-          this.favArray.splice(index, 1);
-          this.storage.set('favoriteBooks', this.favArray);
-      }
+      this.favArray.delete(this.title);
+      this.storage.set('favoriteBooks', JSON.stringify(Array.from(this.favArray)));
     }
 
     addCurrentBookFromFavs() {
-      this.favArray.push(this.title);
-      this.storage.set('favoriteBooks', this.favArray);
+      this.favArray.set(this.title, this.item.author);
+      console.log(this.favArray);
+      this.storage.set('favoriteBooks', JSON.stringify(Array.from(this.favArray)));
     }
 
     printFavs() {

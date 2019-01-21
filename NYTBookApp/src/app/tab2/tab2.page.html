@@ -29,16 +29,16 @@
   </ion-item>
 
   <div style="text-align: center;">
-  <ion-button shape="round" id="searchButton" (click)="search()"><ion-icon name="search"></ion-icon> Search</ion-button>
+  <ion-button shape="round" id="searchButton" style="width: 100%; margin-top: 20px;" (click)="search()"><ion-icon name="search"></ion-icon> Search</ion-button>
   </div>
 
   <!-- list view of content -->
   <ion-list>
-  <ion-item button color="light" *ngFor="let item of books" (click)="goToDetailsPageFor(item.title, item.author)">
-    <ion-label>{{item.title}}<br>
-      <span class="sublabel">{{item.description}}</span>
-    </ion-label>
-  </ion-item>
-</ion-list>
+    <ion-card *ngFor="let item of books" (click)="goToDetailsPageFor(item.title, item.author)">
+      <img src="assets/book.png"/>
+      <div class="card-title">{{item.title}}</div>
+      <div class="card-subtitle">{{item.author}}</div>
+    </ion-card>
+  </ion-list>
 
 </ion-content>

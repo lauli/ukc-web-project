@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Home</ion-title>
+    <ion-title>Bestsellers of the Week</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -23,11 +23,11 @@
 
   <!-- list view of content -->
   <ion-list>
-  <ion-item button color="light" *ngFor="let item of books" (click)="goToDetailsPageFor(item.book_details[0].title, item.book_details[0].author, item.amazon_product_url)">
-    <ion-label>{{item.book_details[0].title}}<br>
-      <span class="sublabel">{{item.book_details[0].description}}</span>
-    </ion-label>
-  </ion-item>
-</ion-list>
+    <ion-card *ngFor="let item of books" (click)="goToDetailsPageFor(item.book_details[0].title, item.book_details[0].author, item.amazon_product_url)">
+      <img src="assets/book.png"/>
+      <div class="card-title">{{item.book_details[0].title}}</div>
+      <div class="card-subtitle">{{item.book_details[0].author}}</div>
+    </ion-card>
+  </ion-list>
 
 </ion-content>

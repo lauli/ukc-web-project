@@ -56,7 +56,7 @@ export class DetailsPage implements OnInit {
 
       this.api.getBookReviewsByTitle(this.title).subscribe( response => {
         if (response.results != null && response.results.length != 0) {
-          console.log("in here");
+          console.log("Found some reviews!");
           this.reviews = response.results;
           this.reviewString = "Reviews:"
         }
@@ -91,10 +91,10 @@ export class DetailsPage implements OnInit {
       }
     }
 
-
     isCurrentBookSameAs(title, author): boolean {
-      console.log(this.item);
       if (title == this.title && author == this.author) {
+        return true;
+      } else if (author == this.author && this.title == title.split('(')[0]) {
         return true;
       } else {
         return false;

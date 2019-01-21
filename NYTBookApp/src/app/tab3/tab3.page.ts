@@ -18,6 +18,7 @@ export class Tab3Page {
 
   async ionViewWillEnter() {
     this.books = [];
+    this.booksMap = new Map<string, string>();
 
     this.storage.get('favoriteBooks').then((bookJSON) => {
       if (bookJSON == '' || bookJSON == undefined) {
@@ -32,6 +33,12 @@ export class Tab3Page {
       });
 
     });
+  }
+
+  deleteFromFav(title) {
+    this.booksMap.delete(title);
+    this.storage.set('favoriteBooks', JSON.stringify(Array.from(this.booksMap)));
+    this.ionViewWillEnter();
   }
 
   goToDetailsPageFor(title) {
