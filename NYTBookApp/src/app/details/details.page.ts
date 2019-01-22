@@ -48,13 +48,13 @@ export class DetailsPage implements OnInit {
       const loading = await this.loadingCtrl.create({});
 
       loading.present().then(() => {
-        this.api.getBookByTitle(this.title, 0).subscribe( response => {
+        this.api.getBooksFrom(null, this.title, this.author, 0).subscribe( response => {
           console.log(response);
           this.requestMore(response.num_results%20, loading);
         });
       });
 
-      this.api.getBookReviewsByTitle(this.title).subscribe( response => {
+      this.api.getBookReviewsByTitle(this.title, this.author).subscribe( response => {
         if (response.results != null && response.results.length != 0) {
           console.log("Found some reviews!");
           this.reviews = response.results;
@@ -76,7 +76,7 @@ export class DetailsPage implements OnInit {
 
     requestMore(times, loading) {
       for (var index = 0; index < times; index++) {
-        this.api.getBookByTitle(this.title, index*20).subscribe ( response => {
+        this.api.getBooksFrom(null, this.title, this.author, index*20).subscribe ( response => {
           for (var item of response.results) {
             console.log(item.author + " -- " + this.author);
             if (this.isCurrentBookSameAs(item.title, item.author)) {

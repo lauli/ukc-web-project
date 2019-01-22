@@ -65,7 +65,7 @@ export class Tab4Page {
 
       this.setupFavButton();
 
-      this.api.getBookReviewsByTitle(this.title).subscribe( response => {
+      this.api.getBookReviewsByTitle(this.title, this.item.author).subscribe( response => {
 
         console.log("Reviews: " + response.results);
 
@@ -173,13 +173,6 @@ export class Tab4Page {
     }
 
     openLink(link) {
-      window.open(link,'_system', 'location=yes');
-    }
-
-    goBack() {
-      console.log('go back');
-      this.storage.get('coming_from').then((url) => {
-        this.navCtrl.navigateBack('tabs/' + url);
-      });
+      window.open(link,'_system');
     }
 }

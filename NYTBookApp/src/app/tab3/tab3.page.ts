@@ -31,7 +31,6 @@ export class Tab3Page {
       this.booksMap.forEach((author: string, title: string) => {
         this.books.push(title);
       });
-
     });
   }
 

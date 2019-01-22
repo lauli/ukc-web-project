@@ -8,8 +8,6 @@ import { Observable } from 'rxjs';
 })
 export class BookDbService {
 
-  // constructor() { }
-
   baseUrl: String;
   apiKey: String;
 
@@ -43,8 +41,8 @@ export class BookDbService {
     return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&isbn=' + isbn);
   }
 
-  getBookReviewsByTitle(title): Observable<any> {
-    return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&title=' + encodeURIComponent(title));
+  getBookReviewsByTitle(title, author): Observable<any> {
+    return this.http.get('https://api.nytimes.com/svc/books/v3/reviews.json?api-key=' + this.apiKey + '&title=' + encodeURIComponent(title) + '&author=' + encodeURIComponent(author));
   }
 
   getBooksFrom(selectedAge, title, author, offset): Observable<any> {
