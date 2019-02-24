@@ -2,7 +2,7 @@
 Project app for mobile web module during MSc degree Mobile Application Development at University of Kent Canterbury
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Swift-4-orange.svg?style=flat" />
+    <img src="https://img.shields.io/badge/Ionic-4-orange.svg" />
 </p>
 
 This project was developed in 12 days for the course "Mobile Web Development" during the Master degree "Mobile Application Development" at the University of Kent in Canterbury. The full project was implemented in **Ionic 4 and Angular**, and its outcome is shown in the document `"report.pdf"`.
